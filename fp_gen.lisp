@@ -164,3 +164,33 @@
 		(printf '//verilog-fp_mac%tend\n)
 		))))
 
+(define fp16_dec
+  (lambda (k)
+	(let*
+	  (s (logand (ash k -15) 1))
+	  (e (logand (ash k -10) 31))
+	  (m (logand k 1023))
+	  (r 1)
+	  (progn
+		(map
+		  (lambda (i)
+			(setq r (+ r (* (nthb (- 10 i) m) (expt 2 (* -1 i))))))
+		  (linspace 1 1 10))
+		(setq r (* (expt -1 s) (expt 2 (- e 15)) r))
+		r))))
+(define fp16_enc
+  (lambda (x)
+	(let*
+	  (s (fp_sign x))
+	  (e (fp_expt x))
+	  (f (fp_frac x))
+	  (m (logand (* f (expt 2 10)) 1023))
+	  (r m)
+	  (progn
+		(if (< e 0)
+		  (setq e (abs e))
+		  (setq e (+ e 15))
+		  )
+		(setq r (logor r (ash s 16)))
+		(setq r (logor r (ash e 11)))
+		r))))
