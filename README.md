@@ -1,2 +1,2 @@
 # fp_gen
-Generator of Verilog HDL RTL combinational logic design of float point operators
+Generator of combinational logic design of float point operators in Verilog HDL
