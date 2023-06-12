@@ -1,5 +1,6 @@
 ;;TinyLisp only
 
+;;verilog DHL code printing functions
 (define verilog-fp_add
   (lambda (a b z sign_bit expt_msb expt_lsb frac_msb frac_lsb)
 	(let*
@@ -164,6 +165,7 @@
 		(printf '//verilog-fp_mac%tend\n)
 		))))
 
+;;runtime functions: decode and encode of float point numbers and double float numbers
 (define fp16_dec
   (lambda (k)
 	(let*
@@ -194,3 +196,8 @@
 		(setq r (logor r (ash s 16)))
 		(setq r (logor r (ash e 11)))
 		r))))
+
+;;global value of data arrival times (ns), from dc_shell report_timing, for other lisp generators
+(define fp_add_arrival_time 6.23)
+(define fp_mul_arrival_time 3.59)
+(define fp_mac_arrival_time 9.11)
