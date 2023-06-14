@@ -1,6 +1,10 @@
 # fp_gen
 Generator of combinational logic design of float point operators in Verilog HDL
 
+Depends:
+1. [tinylisp](https://github.com/Robert-van-Engelen/tinylisp)
+2. [tinylisp_extra_funcs](https://github.com/BHa2R00/tinylisp_extra_funcs)
+
 ![format](https://github.com/BHa2R00/fp_gen/blob/main/20230612215725_922x169_scrot.png)
 
 Format constraints:
