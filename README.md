@@ -1,5 +1,5 @@
 # fp_gen
-Generator of combinational logic design of float point operators in Verilog HDL
+Generator of combinational logic float point operators in Verilog HDL
 
 Depends:
 1. [tinylisp](https://github.com/Robert-van-Engelen/tinylisp)
