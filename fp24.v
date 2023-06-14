@@ -299,4 +299,109 @@ assign z1_shit_merd = z0_shit_merd;
 
 endmodule
 
+//(verilog-fp_int 'shit 'merd 23 22 17 16 0)
+module fp24_int (
+	input [23:0] shit, 
+	output [23:0] merd
+);
+
+//verilog-fp_int start
+wire sign_shit = shit[23];
+wire [5:0] expt_shit = shit[22:17];
+wire [47:0] frac_shit = {30'd1,shit[16:0]};
+wire sign_expt_shit = expt_shit < 31;
+wire [4:0] mant_expt_shit = expt_shit - 31;
+wire [47:0] frac_1_merd = frac_shit << mant_expt_shit;
+assign merd = sign_expt_shit ? 0 : (mant_expt_shit > 30) ? 2**31-1 : {sign_shit,frac_1_merd[47:17]};
+//verilog-fp_int end
+
+endmodule
+
+//(verilog-fp_num 'shit 'merd 23 22 17 16 0)
+module fp24_num (
+	input [23:0] shit, 
+	output [23:0] merd
+);
+
+//verilog-fp_num start
+wire sign_merd = shit[23];
+wire [53:0] frac_shit = {shit[22:0],31'd0};
+wire [22:0] check_frac_shit;
+assign check_frac_shit[22] = frac_shit[53];
+assign check_frac_shit[21] = ~check_frac_shit[22] & frac_shit[52];
+assign check_frac_shit[20] = ~check_frac_shit[21] & frac_shit[51];
+assign check_frac_shit[19] = ~check_frac_shit[20] & frac_shit[50];
+assign check_frac_shit[18] = ~check_frac_shit[19] & frac_shit[49];
+assign check_frac_shit[17] = ~check_frac_shit[18] & frac_shit[48];
+assign check_frac_shit[16] = ~check_frac_shit[17] & frac_shit[47];
+assign check_frac_shit[15] = ~check_frac_shit[16] & frac_shit[46];
+assign check_frac_shit[14] = ~check_frac_shit[15] & frac_shit[45];
+assign check_frac_shit[13] = ~check_frac_shit[14] & frac_shit[44];
+assign check_frac_shit[12] = ~check_frac_shit[13] & frac_shit[43];
+assign check_frac_shit[11] = ~check_frac_shit[12] & frac_shit[42];
+assign check_frac_shit[10] = ~check_frac_shit[11] & frac_shit[41];
+assign check_frac_shit[9] = ~check_frac_shit[10] & frac_shit[40];
+assign check_frac_shit[8] = ~check_frac_shit[9] & frac_shit[39];
+assign check_frac_shit[7] = ~check_frac_shit[8] & frac_shit[38];
+assign check_frac_shit[6] = ~check_frac_shit[7] & frac_shit[37];
+assign check_frac_shit[5] = ~check_frac_shit[6] & frac_shit[36];
+assign check_frac_shit[4] = ~check_frac_shit[5] & frac_shit[35];
+assign check_frac_shit[3] = ~check_frac_shit[4] & frac_shit[34];
+assign check_frac_shit[2] = ~check_frac_shit[3] & frac_shit[33];
+assign check_frac_shit[1] = ~check_frac_shit[2] & frac_shit[32];
+assign check_frac_shit[0] = ~check_frac_shit[1] & frac_shit[31];
+wire [16:0] frac_merd = 
+	check_frac_shit[22] ? frac_shit[52:36] : 
+	check_frac_shit[21] ? frac_shit[51:35] : 
+	check_frac_shit[20] ? frac_shit[50:34] : 
+	check_frac_shit[19] ? frac_shit[49:33] : 
+	check_frac_shit[18] ? frac_shit[48:32] : 
+	check_frac_shit[17] ? frac_shit[47:31] : 
+	check_frac_shit[16] ? frac_shit[46:30] : 
+	check_frac_shit[15] ? frac_shit[45:29] : 
+	check_frac_shit[14] ? frac_shit[44:28] : 
+	check_frac_shit[13] ? frac_shit[43:27] : 
+	check_frac_shit[12] ? frac_shit[42:26] : 
+	check_frac_shit[11] ? frac_shit[41:25] : 
+	check_frac_shit[10] ? frac_shit[40:24] : 
+	check_frac_shit[9] ? frac_shit[39:23] : 
+	check_frac_shit[8] ? frac_shit[38:22] : 
+	check_frac_shit[7] ? frac_shit[37:21] : 
+	check_frac_shit[6] ? frac_shit[36:20] : 
+	check_frac_shit[5] ? frac_shit[35:19] : 
+	check_frac_shit[4] ? frac_shit[34:18] : 
+	check_frac_shit[3] ? frac_shit[33:17] : 
+	check_frac_shit[2] ? frac_shit[32:16] : 
+	check_frac_shit[1] ? frac_shit[31:15] : 
+	check_frac_shit[0] ? frac_shit[30:14] : 
+	0;
+wire [5:0] expt_merd = 
+	check_frac_shit[22] ? 53 : 
+	check_frac_shit[21] ? 52 : 
+	check_frac_shit[20] ? 51 : 
+	check_frac_shit[19] ? 50 : 
+	check_frac_shit[18] ? 49 : 
+	check_frac_shit[17] ? 48 : 
+	check_frac_shit[16] ? 47 : 
+	check_frac_shit[15] ? 46 : 
+	check_frac_shit[14] ? 45 : 
+	check_frac_shit[13] ? 44 : 
+	check_frac_shit[12] ? 43 : 
+	check_frac_shit[11] ? 42 : 
+	check_frac_shit[10] ? 41 : 
+	check_frac_shit[9] ? 40 : 
+	check_frac_shit[8] ? 39 : 
+	check_frac_shit[7] ? 38 : 
+	check_frac_shit[6] ? 37 : 
+	check_frac_shit[5] ? 36 : 
+	check_frac_shit[4] ? 35 : 
+	check_frac_shit[3] ? 34 : 
+	check_frac_shit[2] ? 33 : 
+	check_frac_shit[1] ? 32 : 
+	check_frac_shit[0] ? 31 : 
+	0;
+assign merd = {sign_merd,expt_merd,frac_merd};
+//verilog-fp_num end
+
+endmodule
 
