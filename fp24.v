@@ -134,15 +134,21 @@ module fp24_add (
 wire sign_shit = shit[23];
 wire sign_merd = merd[23];
 wire sign_mist = sign_shit ^ sign_merd;
-wire [5:0] expt_shit = shit[22:17];
-wire [5:0] expt_merd = merd[22:17];
-wire [5:0] expt_1_mist = expt_shit + expt_merd - 31;
 wire [17:0] frac_shit = {1'b1,shit[16:0]};
 wire [17:0] frac_merd = {1'b1,merd[16:0]};
 wire [35:0] frac_1_mist = frac_shit * frac_merd;
 wire check_frac_1_mist = frac_1_mist[35];
-wire [5:0] expt_mist = check_frac_1_mist ? expt_1_mist + 1 : expt_1_mist;
 wire [16:0] frac_mist = check_frac_1_mist ? frac_1_mist[34:18] : frac_1_mist[33:17];
+wire [5:0] expt_shit = shit[22:17];
+wire [5:0] expt_merd = merd[22:17];
+wire sign_expt_shit = expt_shit < 31;
+wire sign_expt_merd = expt_merd < 31;
+wire sign_1_mist = sign_expt_shit & sign_expt_merd;
+wire [5:0] expt_1_mist = expt_shit + expt_merd - 31 + (check_frac_1_mist ? 1 : 0);
+wire [6:0] expt_2_mist = expt_shit + expt_merd - 31 + (check_frac_1_mist ? 1 : 0);
+wire [6:0] expt_2_max_mist = 63;
+wire [6:0] expt_2_min_mist = ~expt_2_max_mist + 1;
+wire [5:0] expt_mist = ((~sign_1_mist&(expt_2_mist >= expt_2_max_mist))|(sign_1_mist&(expt_2_mist >= expt_2_min_mist))) ? 63 : expt_1_mist;
 assign mist = {sign_mist,expt_mist,frac_mist};
 //verilog-fp_mul end
 
