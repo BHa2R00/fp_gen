@@ -177,6 +177,75 @@
 		(printf '//verilog-fp_mac%tend\n)
 		))))
 
+(define verilog-fp_int 
+  (lambda (a z sign_bit expt_msb expt_lsb frac_msb frac_lsb)
+	(let*
+	  (expt_sb (+ (abs(- expt_msb expt_lsb)) 1))
+	  (frac_sb (+ (abs(- frac_msb frac_lsb)) 1))
+	  (expt_mask (- (expt 2 (- expt_sb 1)) 1))
+	  (sa (s+ 'sign_ a))
+	  (ea (s+ 'expt_ a))
+	  (fa (s+ 'frac_ a))
+	  (sea (s+ 'sign_expt_ a))
+	  (mea (s+ 'mant_expt_ a))
+	  (f1 (s+ 'frac_1_ z))
+	  (progn
+		(printf '\n//verilog-fp_int%tstart\n)
+		(printf 'wire%t%s%t=%t%s[%d];\n sa a sign_bit)
+		(printf 'wire%t[%d:0]%t%s%t=%t%s[%d:%d];\n (- expt_msb expt_lsb) ea a expt_msb expt_lsb)
+		(printf 'wire%t[%d:0]%t%s%t=%t{%d\'d1,%s[%d:0]};\n (+ expt_mask -1 expt_lsb) fa (+ expt_mask -1) a frac_msb)
+		(printf 'wire%t%s%t=%t%s%t<%t%d;\n sea ea expt_mask)
+		(printf 'wire%t[%d:0]%t%s%t=%t%s%t-%t%d;\n (- expt_msb expt_lsb 1) mea ea expt_mask)
+		(printf 'wire%t[%d:0]%t%s%t=%t%s%t<<%t%s;\n (+ expt_mask -1 expt_lsb) f1 fa mea)
+		(printf 'assign%t%s%t=%t%s%t?%t0%t:%t%l%s%t>%t%d%r%t?%t2**%d-1%t:%t{%s,%s[%d:%d]};\n z sea mea (+ expt_mask -1) expt_mask sa f1 (+ expt_mask -1 expt_lsb) expt_lsb)
+		(printf '//verilog-fp_int%tend\n)
+		))))
+
+(define verilog-fp_num
+  (lambda (a z sign_bit expt_msb expt_lsb frac_msb frac_lsb)
+	(let*
+	  (expt_sb (+ (abs(- expt_msb expt_lsb)) 1))
+	  (frac_sb (+ (abs(- frac_msb frac_lsb)) 1))
+	  (expt_mask (- (expt 2 (- expt_sb 1)) 1))
+	  (sz (s+ 'sign_ z))
+	  (fa (s+ 'frac_ a))
+	  (cfa (s+ 'check_frac_ a))
+	  (fz (s+ 'frac_ z))
+	  (ez (s+ 'expt_ z))
+	  (progn
+		(printf '\n//verilog-fp_num%tstart\n)
+		(printf 'wire%t%s%t=%t%s[%d];\n sz a sign_bit)
+		(printf 'wire%t[%d:0]%t%s%t=%t{%s[%d:0],%d\'d0};\n (+ expt_msb expt_mask) fa a expt_msb expt_mask)
+		(printf 'wire%t[%d:0]%t%s;\n expt_msb cfa)
+		(printf 'assign%t%s[%d]%t=%t%s[%d];\n cfa expt_msb fa (+ expt_msb expt_mask))
+		(mapcar
+		  (lambda (bcfa)
+			(let*
+			  (bbcfa (+ bcfa 1))
+			  (bfa (+ bcfa expt_mask))
+			  (printf 'assign%t%s[%d]%t=%t~%s[%d]%t&%t%s[%d];\n cfa bcfa cfa bbcfa fa bfa)))
+		  (linspace (+ expt_msb -1) -1 0))
+		(printf 'wire%t[%d:0]%t%s%t=%t\n frac_msb fz)
+		(mapcar
+		  (lambda (bcfa)
+			(let*
+			  (msbfa (+ bcfa -1 expt_mask))
+			  (lsbfa (- msbfa frac_msb))
+			  (printf '\t%s[%d]%t?%t%s[%d:%d]%t:%t\n cfa bcfa fa msbfa lsbfa)))
+		  (linspace expt_msb -1 0))
+		(printf '\t0;\n)
+		(printf 'wire%t[%d:0]%t%s%t=%t\n (- expt_msb expt_lsb) ez)
+		(mapcar
+		  (lambda (bcfa)
+			(let*
+			  (nez (+ bcfa expt_mask))
+			  (printf '\t%s[%d]%t?%t%d%t:%t\n cfa bcfa nez)))
+		  (linspace expt_msb -1 0))
+		(printf '\t0;\n)
+		(printf 'assign%t%s%t=%t{%s,%s,%s};\n z sz ez fz)
+		(printf '//verilog-fp_num%tend\n)
+		))))
+
 ;;runtime functions: decode and encode of float point numbers and double float numbers
 (define fp16_dec
   (lambda (k)
