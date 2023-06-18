@@ -266,16 +266,13 @@
 	(let*
 	  (s (fp_sign x))
 	  (e (fp_expt x))
-	  (f (fp_frac x))
-	  (m (logand (* f (expt 2 10)) 1023))
+	  (f (abs(fp_frac x)))
+	  (m (+ 1 (logand (* f (expt 2 11)) 1023)))
 	  (r m)
 	  (progn
-		(if (< e 0)
-		  (setq e (abs e))
-		  (setq e (+ e 15))
-		  )
-		(setq r (logor r (ash s 16)))
-		(setq r (logor r (ash e 11)))
+		(if (< e 0) (setq e (abs e)) (setq e (+ e 14)))
+		(setq r (logor r (ash s 15)))
+		(setq r (logor r (ash e 10)))
 		r))))
 
 ;;global value of data arrival times (ns), from dc_shell report_timing, for other lisp generators
