@@ -253,25 +253,26 @@
 	  (s (logand (ash k -15) 1))
 	  (e (logand (ash k -10) 31))
 	  (m (logand k 1023))
-	  (r 1)
+	  (r (if (= e 0) 0 1))
 	  (progn
 		(map
 		  (lambda (i)
 			(setq r (+ r (* (nthb (- 10 i) m) (expt 2 (* -1 i))))))
 		  (linspace 1 1 10))
-		(setq r (* (expt -1 s) (expt 2 (- e 15)) r))
+		(setq r (* (expt -1 s) (expt 2 (if (= e 0) -14 (- e 15))) r))
 		r))))
 (define fp16_enc
   (lambda (x)
 	(let*
 	  (s (fp_sign x))
-	  (e (+ 14 (fp_expt x)))
+	  (e (fp_expt x))
+	  (e1 (if (= e 0) e (+ 14 (fp_expt x))))
 	  (f (abs(fp_frac x)))
-	  (m (+ 1 (logand (* f (expt 2 11)) 1023)))
+	  (m (+ (if (= e 0) 0 1) (logand (* f (expt 2 11)) 1023)))
 	  (r m)
 	  (progn
 		(setq r (logor r (ash s 15)))
-		(setq r (logor r (ash e 10)))
+		(setq r (logor r (ash e1 10)))
 		r))))
 
 ;;global value of data arrival times (ns), from dc_shell report_timing, for other lisp generators
