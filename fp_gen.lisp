@@ -265,12 +265,11 @@
   (lambda (x)
 	(let*
 	  (s (fp_sign x))
-	  (e (fp_expt x))
+	  (e (+ 14 (fp_expt x)))
 	  (f (abs(fp_frac x)))
 	  (m (+ 1 (logand (* f (expt 2 11)) 1023)))
 	  (r m)
 	  (progn
-		(if (< e 0) (setq e (abs e)) (setq e (+ e 14)))
 		(setq r (logor r (ash s 15)))
 		(setq r (logor r (ash e 10)))
 		r))))
