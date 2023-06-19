@@ -1,6 +1,6 @@
 ;;TinyLisp only
-
 ;;verilog DHL code printing functions
+
 (define verilog-fp_add
   (lambda (a b z sign_bit expt_msb expt_lsb frac_msb frac_lsb)
 	(let*
