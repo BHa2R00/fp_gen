@@ -5,7 +5,7 @@ Depends:
 1. [tinylisp](https://github.com/Robert-van-Engelen/tinylisp)
 2. [tinylisp_extra_funcs](https://github.com/BHa2R00/tinylisp_extra_funcs)
 
-![format](https://github.com/BHa2R00/fp_gen/blob/main/20230612215725_922x169_scrot.png)
+![format](https://github.com/BHa2R00/fp_gen/blob/main/20230619172202_903x172_scrot.png)
 
 Format constraints:
 1. Little endian.
